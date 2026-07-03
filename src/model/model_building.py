@@ -65,8 +65,8 @@ def load_data() -> tuple[pd.DataFrame, pd.DataFrame]:
     try:
         logger.info("Loading feature datasets...")
 
-        train_data = pd.read_csv("./data/interim/train_bow.csv")
-        test_data = pd.read_csv("./data/interim/test_bow.csv")
+        train_data = pd.read_csv("./data/interim/train_tfidf.csv")
+        test_data = pd.read_csv("./data/interim/test_tfidf.csv")
 
         logger.info(f"Train Shape : {train_data.shape}")
         logger.info(f"Test Shape : {test_data.shape}")

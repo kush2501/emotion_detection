@@ -3,7 +3,7 @@ import yaml
 import pandas as pd
 import logging
 
-from sklearn.feature_extraction.text import CountVectorizer
+from sklearn.feature_extraction.text import TfidfVectorizer
 
 
 import logging
@@ -68,14 +68,14 @@ def load_data() -> tuple[pd.DataFrame, pd.DataFrame]:
 
 
 # Apply Bag of Words
-def apply_bow(
+def apply_tfidf(
     train_df: pd.DataFrame,
     test_df: pd.DataFrame,
     max_features: int
 ) -> tuple[pd.DataFrame, pd.DataFrame]:
 
     try:
-        logger.info("Applying CountVectorizer...")
+        logger.info("Applying TfidfVectorizer...")
 
         X_train = train_df["content"].values
         y_train = train_df["sentiment"].values
@@ -83,20 +83,20 @@ def apply_bow(
         X_test = test_df["content"].values
         y_test = test_df["sentiment"].values
 
-        vectorizer = CountVectorizer(
+        vectorizer = TfidfVectorizer(
             max_features=max_features
         )
 
-        X_train_bow = vectorizer.fit_transform(X_train)
-        X_test_bow = vectorizer.transform(X_test)
+        X_train_tfidf = vectorizer.fit_transform(X_train)
+        X_test_tfidf= vectorizer.transform(X_test)
 
-        train_bow = pd.DataFrame(X_train_bow.toarray())
+        train_bow = pd.DataFrame(X_train_tfidf.toarray())
         train_bow["label"] = y_train
 
-        test_bow = pd.DataFrame(X_test_bow.toarray())
+        test_bow = pd.DataFrame(X_test_tfidf.toarray())
         test_bow["label"] = y_test
 
-        logger.info("Bag of Words completed.")
+        logger.info("TfidfVectorizer completed.")
         logger.info(f"Vocabulary Size : {len(vectorizer.vocabulary_)}")
 
         return train_bow, test_bow
@@ -120,12 +120,12 @@ def save_data(
         os.makedirs(data_path, exist_ok=True)
 
         train_df.to_csv(
-            os.path.join(data_path, "train_bow.csv"),
+            os.path.join(data_path, "train_tfidf.csv"),
             index=False
         )
 
         test_df.to_csv(
-            os.path.join(data_path, "test_bow.csv"),
+            os.path.join(data_path, "test_tfidf.csv"),
             index=False
         )
 
@@ -148,20 +148,20 @@ def main():
 
         train_data, test_data = load_data()
 
-        train_bow, test_bow = apply_bow(
+        train_tfidf, test_tfidf = apply_tfidf(
             train_data,
             test_data,
             max_features
         )
 
-        save_data(train_bow, test_bow)
+        save_data(train_tfidf, test_tfidf)
 
         logger.info(
-            f"Train Feature Shape : {train_bow.shape}"
+            f"Train Feature Shape : {train_tfidf.shape}"
         )
 
         logger.info(
-            f"Test Feature Shape : {test_bow.shape}"
+            f"Test Feature Shape : {test_tfidf.shape}"
         )
 
         logger.info("Feature Engineering Completed Successfully")

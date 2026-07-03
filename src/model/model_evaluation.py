@@ -64,7 +64,7 @@ def load_data() -> pd.DataFrame:
     try:
         logger.info("Loading test dataset...")
 
-        test_data = pd.read_csv("./data/interim/test_bow.csv")
+        test_data = pd.read_csv("./data/interim/test_tfidf.csv")
 
         logger.info(f"Test dataset loaded. Shape: {test_data.shape}")
 
@@ -161,7 +161,7 @@ def main():
 
         metrics = evaluate_model(model, X_test, y_test)
 
-        save_metrics(metrics, "metrics.json")
+        save_metrics(metrics, "./reports/metrics.json")
 
         logger.info(f"Evaluation Metrics: {metrics}")
 
